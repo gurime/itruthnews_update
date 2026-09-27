@@ -39,7 +39,6 @@ style={{ width: "auto" ,height:"auto"}}
 
 className="mb-4 cursor-pointer"/>
 
-
 <p className="text-blue-100 text-sm">
 Delivering accurate coverage you can rely on. Stay informed with truly clear reporting.
 </p>
@@ -52,11 +51,11 @@ section="company"
 openSection={openSection}
 toggleSection={toggleSection}
 >
-<FooterLink href="/about" label="About Us" />
-<FooterLink href="/advertise" label="Advertise" />
-<FooterLink href="/careers" label="Careers" />
-<FooterLink href="/press" label="Press & Media" />
-<FooterLink href="/editorial" label="Editorial Guidelines" />
+<FooterLink href="../about" label="About Us" />
+<FooterLink href="../advertise" label="Advertise" />
+<FooterLink href="../careers" label="Careers" />
+<FooterLink href="../press" label="Press & Media" />
+<FooterLink href="../editorial" label="Editorial Guidelines" />
 </FooterCollapse>
 
 {/* Support */}
@@ -66,10 +65,10 @@ section="support"
 openSection={openSection}
 toggleSection={toggleSection}
 >
-<FooterLink href="/contact" label="Contact" />
-<FooterLink href="/feedback" label="Send Feedback" />
-<FooterLink href="/corrections" label="Report a Correction" />
-<FooterLink href="/faq" label="FAQ" />
+<FooterLink href="../contact" label="Contact" />
+<FooterLink href="../feedback" label="Send Feedback" />
+<FooterLink href="../corrections" label="Report a Correction" />
+<FooterLink href="../faq" label="FAQ" />
 </FooterCollapse>
 
 {/* Legal */}
@@ -79,9 +78,9 @@ section="legal"
 openSection={openSection}
 toggleSection={toggleSection}
 >
-<FooterLink href="/privacy" label="Privacy Policy" />
-<FooterLink href="/terms" label="Terms of Service" />
-<FooterLink href="/cookies" label="Cookie Policy" />
+<FooterLink href="../privacy" label="Privacy Policy" />
+<FooterLink href="../terms" label="Terms of Service" />
+<FooterLink href="../cookies" label="Cookie Policy" />
 <FooterLink href="../accessibility" label="Accessibility" />
 </FooterCollapse>
 </div>
