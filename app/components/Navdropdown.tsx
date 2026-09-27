@@ -9,6 +9,7 @@ import type { NavMenuItem } from "../utils/Types";
 interface NavDropdownProps {
 item: NavMenuItem;
 isOpen: boolean;
+disabled?: boolean;
 onOpen: () => void;
 onClose: () => void;
 /** Render as a locked upsell link instead of a dropdown (e.g. elite-only items) */
@@ -17,31 +18,33 @@ lockedHref?: string;
 panelAlign?: "left" | "right";
 }
 
-// Each NavDropdown owns its own refs, so the outside-click check below only
-// ever looks at *this* dropdown's button/panel — fixing the original bug
-// where a single shared ref pair got overwritten by whichever dropdown
-// rendered last, so outside-click only ever worked for one of them.
 export default function NavDropdown({
 item,
 isOpen,
+disabled = false,
 onOpen,
 onClose,
 locked = false,
 lockedHref = "/membership",
-panelAlign = "right",
+panelAlign = "left",
 }: NavDropdownProps) {
 const [activeSection, setActiveSection] = useState<string | null>(null);
 const buttonRef = useRef<HTMLButtonElement | null>(null);
 const panelRef = useRef<HTMLDivElement | null>(null);
 
+// Combine parent component `disabled` prop with item `disabled` property if present
+const isDisabled = Boolean(disabled || item.disabled);
+
 useEffect(() => {
 if (!isOpen) return;
 
 const handleClickOutside = (event: MouseEvent) => {
-const target = event.target as Node;
+const target = event.target;
+if (!(target instanceof Element)) return;
 if (
 panelRef.current?.contains(target) ||
-buttonRef.current?.contains(target)
+buttonRef.current?.contains(target) ||
+target.closest("[data-nav-dropdown]")?.getAttribute("data-nav-dropdown") === item.id
 ) {
 return;
 }
@@ -50,8 +53,9 @@ onClose();
 
 document.addEventListener("mousedown", handleClickOutside);
 return () => document.removeEventListener("mousedown", handleClickOutside);
-}, [isOpen, onClose]);
+}, [isOpen, onClose, item.id]);
 
+// Handle locked items (upsell link)
 if (locked) {
 return (
 <Link
@@ -72,29 +76,48 @@ clipRule="evenodd"
 }
 
 return (
-<div className="relative inline-block">
+<div className="relative inline-block" data-nav-dropdown={item.id}>
 <button
 ref={buttonRef}
 type="button"
-className="text-white hover:underline decoration-2 font-bold cursor-pointer whitespace-nowrap flex items-center"
-onClick={() => (isOpen ? onClose() : onOpen())}
+disabled={isDisabled}
+onClick={isDisabled ? undefined : () => (isOpen ? onClose() : onOpen())}
 aria-expanded={isOpen}
+aria-disabled={isDisabled}
+title={isDisabled ? `Upgrade to access ${item.label}` : undefined}
+className={`font-bold whitespace-nowrap flex items-center transition-opacity ${
+isDisabled
+? "text-white/40 cursor-not-allowed pointer-events-none"
+: "text-white hover:underline decoration-2 cursor-pointer"
+}`}
 >
 {item.label}
+{isDisabled ? (
+<svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+<path
+fillRule="evenodd"
+d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+clipRule="evenodd"
+/>
+</svg>
+) : (
 <ChevronDown
 height={20}
 className={`ml-1 transition-transform duration-300 ${
 isOpen ? "rotate-180" : ""
 }`}
 />
+)}
 </button>
 
-{isOpen && (
+{isOpen && !isDisabled && (
 <div
 ref={panelRef}
-className={`absolute z-50 mt-2 bg-blue-900 border border-gray-400 rounded-md shadow-lg p-2 ${panelAlign === "right" ? "right-0" : "left-0"} ${
-item.panelWidth || "w-64"
-}`}
+className={`absolute left-0 ${
+panelAlign === "right" ? "md:left-auto md:right-0" : ""
+} bg-blue-900 text-white mt-2 py-4 ${
+item.panelWidth ?? "w-80"
+} max-w-[92vw] rounded shadow-lg z-50 max-h-87.5 overflow-y-auto`}
 >
 {item.sections.map((section, i) => (
 <AccordionSection

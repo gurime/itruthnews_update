@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 
 import NavDropdown from "./Navdropdown";
 import { navMenuItems } from "./NavigationData";
-// Adjust this import path to wherever category_tables actually lives in your project.
 import { specialCoverage } from "../admin/category_tables";
+import { Lock } from "lucide-react";
 
 interface NavbarProps {
 /** Wire these to your real auth/subscription source when ready */
@@ -74,9 +74,11 @@ onOpen={() => setOpenDropdownId(item.id)}
 onClose={() =>
 setOpenDropdownId((curr) => (curr === item.id ? null : curr))
 }
-locked={item.eliteOnly && !isEliteMember}
-panelAlign="right"
+disabled={item.disabled || (item.eliteOnly && !isEliteMember)}
+panelAlign={item.align ?? "left"}
 />
+
+
 );
 
 return (
@@ -160,7 +162,7 @@ priority
 alt={logoAlt}
 width={200}
 height={200}
-style={{ width: "auto", height: "auto" }}
+className="mx-auto"
 />
 </Link>
 </div>

@@ -193,6 +193,7 @@ links: [
 id: "technology",
 label: "Technology",
 panelWidth: "w-80",
+align: "right",
 sections: [
 {
 id: "personal-tech",
@@ -241,6 +242,7 @@ links: [
 id: "sports",
 label: "Sports",
 panelWidth: "w-80",
+align: "right",
 sections: [
 {
 id: "professional",
@@ -299,6 +301,7 @@ links: [
 id: "arts",
 label: "Arts",
 panelWidth: "w-80",
+align: "right",
 sections: [
 {
 id: "arts-culture",
