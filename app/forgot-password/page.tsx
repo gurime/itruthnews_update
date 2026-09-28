@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-// import supabase from "../supabase/supabase"; // TODO: re-enable once Supabase is wired up
 import Link from "next/link";
+import { createClient } from "../utils/supabase/client";
 
 export default function ForgotPassword() {
 const router = useRouter();
@@ -29,33 +29,23 @@ setLoading(false);
 return;
 }
 
-// --- Supabase call (disabled for now) ---
-// try {
-//   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-//     redirectTo: `${window.location.origin}/reset-password`,
-//   });
-//   if (error) throw error;
-//   setMessage("Password reset email sent! Please check your inbox and spam folder.");
-//   setEmail("");
-// } catch (error: unknown) {
-//   if (typeof error === "object" && error !== null && "message" in error) {
-//     setError((error as { message?: string }).message || "An error occurred while sending reset email");
-//   } else {
-//     setError("An error occurred while sending reset email");
-//   }
-// } finally {
-//   setLoading(false);
-// }
-
-// Layout-only stand-in: simulate a network round trip so the loading
-// state/spinner are visible, then just report success without touching auth.
-setTimeout(() => {
-setMessage(
-"Password reset email sent! (placeholder — Supabase not connected)"
-);
-setEmail("");
-setLoading(false);
-}, 800);
+try {
+	const supabase = createClient();
+	const { error } = await supabase.auth.resetPasswordForEmail(email, {
+		redirectTo: `${window.location.origin}/reset-password`,
+	});
+	if (error) throw error;
+	setMessage("Password reset email sent. Check your inbox and spam folder.");
+	setEmail("");
+} catch (error: unknown) {
+	setError(
+		error instanceof Error
+			? error.message
+			: "Unable to send a reset email. Please try again."
+	);
+} finally {
+	setLoading(false);
+}
 };
 
 return (

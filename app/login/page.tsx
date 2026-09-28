@@ -1,19 +1,24 @@
 "use client";
+
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-// import supabase from "../supabase/supabase"; // TODO: re-enable once Supabase is wired up
+import { Suspense, useState, useEffect } from "react";
+import { createClient } from "../utils/supabase/client";
 import Image from "next/image";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function Login() {
+function LoginForm() {
 const router = useRouter();
+const searchParams = useSearchParams();
+const tab = searchParams.get("tab");
+const redirectTo = searchParams.get("redirect") || "/";
 
 // UI State
-const [isLogin, setIsLogin] = useState(true);
-// No Supabase session check running right now, so there's nothing to wait
-// on — start unblocked instead of stuck behind a check that never resolves.
-const [initialLoading] = useState(false);
+const [isLogin, setIsLogin] = useState<boolean | null>(null);
+const isLoginMode = isLogin ?? tab !== "signup";
+
+// Loading States
+const [initialLoading, setInitialLoading] = useState(true);
 const [loading, setLoading] = useState(false);
 
 // Form State
@@ -22,67 +27,51 @@ const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
 const [error, setError] = useState("");
-const searchParams = useSearchParams();
-const tab = searchParams.get("tab");
 
 useEffect(() => {
-if (tab === "signup") {
-setIsLogin(false);
+const supabase = createClient();
+const checkUser = async () => {
+try {
+const {
+data: { session },
+} = await supabase.auth.getSession();
+if (session) {
+router.replace(redirectTo);
 } else {
-setIsLogin(true);
+setInitialLoading(false);
 }
-}, [tab]);
-
-// --- Supabase session check (disabled for now) ---
-// useEffect(() => {
-//   const checkUser = async () => {
-//     try {
-//       const {
-//         data: { session },
-//       } = await supabase.auth.getSession();
-//       if (session) {
-//         router.replace("/");
-//       } else {
-//         setInitialLoading(false);
-//       }
-//     } catch (e) {
-//       setInitialLoading(false);
-//     }
-//   };
-//   checkUser();
-// }, [router]);
+} catch (e) {
+setInitialLoading(false);
+}
+};
+checkUser();
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [router]);
 
 const handleLogin = async (e: React.FormEvent) => {
 e.preventDefault();
 setLoading(true);
 setError("");
 
-// --- Supabase call (disabled for now) ---
-// try {
-//   const { error } = await supabase.auth.signInWithPassword({
-//     email,
-//     password,
-//   });
-//   if (error) throw error;
-//   toast.success("Login successful!");
-//   router.refresh();
-//   router.push("/");
-// } catch (error: unknown) {
-//   if (typeof error === "object" && error !== null && "message" in error) {
-//     setError((error as { message?: string }).message || "An error occurred");
-//   } else {
-//     setError("An error occurred");
-//   }
-// } finally {
-//   setLoading(false);
-// }
-
-// Layout-only stand-in: simulate a network round trip so the loading
-// state/spinner are visible, then just report success without touching auth.
-setTimeout(() => {
-toast.success("Login successful! (placeholder — Supabase not connected)");
+try {
+const supabase = createClient();
+const { error } = await supabase.auth.signInWithPassword({
+email,
+password,
+});
+if (error) throw error;
+toast.success("Login successful!");
+router.refresh();
+router.replace(redirectTo);
+} catch (error: unknown) {
+setError(
+error instanceof Error
+? error.message
+: "Unable to sign in. Please try again."
+);
+} finally {
 setLoading(false);
-}, 800);
+}
 };
 
 const handleSignup = async (e: React.FormEvent) => {
@@ -102,48 +91,41 @@ setLoading(false);
 return;
 }
 
-// --- Supabase call (disabled for now) ---
-// try {
-//   const { error } = await supabase.auth.signUp({
-//     email,
-//     password,
-//     options: {
-//       data: {
-//         full_name: fullName,
-//       },
-//     },
-//   });
-//   if (error) throw error;
-//   toast.success(
-//     "Account created! Please check your email to verify your account."
-//   );
-//   setFullName("");
-//   setEmail("");
-//   setPassword("");
-//   setConfirmPassword("");
-//   setIsLogin(true);
-// } catch (error: unknown) {
-//   if (typeof error === "object" && error !== null && "message" in error) {
-//     setError((error as { message?: string }).message || "An error occurred");
-//   } else {
-//     setError("An error occurred");
-//   }
-// } finally {
-//   setLoading(false);
-// }
+try {
+const supabase = createClient();
+const { data, error } = await supabase.auth.signUp({
+email,
+password,
+options: {
+data: { full_name: fullName },
+emailRedirectTo: `${window.location.origin}/auth/callback`,
+},
+});
+if (error) throw error;
 
-// Layout-only stand-in
-setTimeout(() => {
-toast.success(
-"Account created! (placeholder — Supabase not connected)"
-);
 setFullName("");
-setEmail("");
 setPassword("");
 setConfirmPassword("");
+
+if (data.session) {
+toast.success("Account created successfully!");
+router.refresh();
+router.replace(redirectTo);
+} else {
+toast.success(
+"Account created. Check your email to confirm your address."
+);
 setIsLogin(true);
+}
+} catch (error: unknown) {
+setError(
+error instanceof Error
+? error.message
+: "Unable to create your account. Please try again."
+);
+} finally {
 setLoading(false);
-}, 800);
+}
 };
 
 if (initialLoading) {
@@ -170,10 +152,10 @@ priority
 </Link>
 
 <h1 className="text-3xl font-bold text-white mb-2">
-{isLogin ? "Welcome Back" : "Join iTruth News"}
+{isLoginMode ? "Welcome Back" : "Join iTruth News"}
 </h1>
 <p className="text-white text-sm">
-{isLogin
+{isLoginMode
 ? "Sign in to access your account"
 : "Create an account to get started"}
 </p>
@@ -190,7 +172,7 @@ setIsLogin(true);
 setError("");
 }}
 className={`flex-1 py-2 px-4 rounded-md font-medium transition-all cursor-pointer ${
-isLogin
+isLoginMode
 ? "bg-blue-900 text-white shadow-md"
 : "text-gray-600 hover:text-gray-900"
 }`}
@@ -204,7 +186,7 @@ setIsLogin(false);
 setError("");
 }}
 className={`flex-1 py-2 px-4 rounded-md font-medium transition-all cursor-pointer ${
-!isLogin
+!isLoginMode
 ? "bg-blue-900 text-white shadow-md"
 : "text-gray-600 hover:text-gray-900"
 }`}
@@ -222,11 +204,11 @@ Sign Up
 
 {/* Form */}
 <form
-onSubmit={isLogin ? handleLogin : handleSignup}
+onSubmit={isLoginMode ? handleLogin : handleSignup}
 className="space-y-4"
 >
 {/* Full Name Input */}
-{!isLogin && (
+{!isLoginMode && (
 <div>
 <label
 htmlFor="fname"
@@ -283,7 +265,7 @@ Password
 id="password"
 type="password"
 name="password"
-autoComplete={isLogin ? "current-password" : "new-password"}
+autoComplete={isLoginMode ? "current-password" : "new-password"}
 value={password}
 onChange={(e) => setPassword(e.target.value)}
 required
@@ -293,7 +275,7 @@ placeholder="••••••••"
 </div>
 
 {/* Confirm Password (Signup only) */}
-{!isLogin && (
+{!isLoginMode && (
 <div>
 <label
 htmlFor="confirmPassword"
@@ -316,7 +298,7 @@ placeholder="••••••••"
 )}
 
 {/* Forgot Password Link (Login only) */}
-{isLogin && (
+{isLoginMode && (
 <div className="text-right">
 <Link
 href="/forgot-password"
@@ -356,9 +338,9 @@ fill="currentColor"
 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 />
 </svg>
-{isLogin ? "Signing in..." : "Creating account..."}
+{isLoginMode ? "Signing in..." : "Creating account..."}
 </span>
-) : isLogin ? (
+) : isLoginMode ? (
 "Sign In"
 ) : (
 "Create Account"
@@ -367,7 +349,7 @@ d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 
 </form>
 
 {/* Terms (Signup only) */}
-{!isLogin && (
+{!isLoginMode && (
 <p className="mt-4 text-xs text-gray-500 text-center">
 By signing up, you agree to our{" "}
 <Link href="/terms" className="text-blue-900 hover:underline">
@@ -392,5 +374,13 @@ className="text-sm text-white transition-colors cursor-pointer"
 </div>
 </div>
 </div>
+);
+}
+
+export default function Login() {
+return (
+<Suspense fallback={null}>
+<LoginForm />
+</Suspense>
 );
 }

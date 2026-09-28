@@ -6,19 +6,18 @@ import { Target, Users, TrendingUp, Globe, BarChart3, Zap, CheckCircle, Mail, Do
 import Link from "next/link";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-// import supabase from "../supabase/supabase"; // TODO: re-enable once Supabase is wired up
+import { createClient } from "../utils/supabase/client";
 import toast, { Toaster } from "react-hot-toast";
 
 interface ScheduleCallModalProps {
 isOpen: boolean;
 onClose: () => void;
-onSubmit: (data: { name: string; email: string; date: string; time: string; notes: string }) => void;
 }
 
 // NOTE: previously typed as `React.FC<...>` without importing `React`, which
 // doesn't compile without a global React type available — fixed by importing
 // `FC` directly from "react" instead.
-const ScheduleCallModal: FC<ScheduleCallModalProps> = ({ isOpen, onClose, onSubmit }) => {
+const ScheduleCallModal: FC<ScheduleCallModalProps> = ({ isOpen, onClose }) => {
 const [name, setName] = useState('');
 const [email, setEmail] = useState('');
 const [date, setDate] = useState('');
@@ -41,49 +40,33 @@ setIsSubmitting(false);
 return;
 }
 
-// --- Supabase insert (disabled for now) ---
-// try {
-//   const { error } = await supabase
-//     .from('schedule_call')
-//     .insert([
-//       {
-//         name: name,
-//         email: email,
-//         scheduled_date: date,
-//         scheduled_time: time,
-//         notes: notes || null
-//       }
-//     ])
-//     .select();
-//   if (error) throw error;
-//   onSubmit({ name, email, date, time, notes });
-//   toast.success('Call scheduled successfully! We will contact you soon.');
-//   setName('');
-//   setEmail('');
-//   setDate('');
-//   setTime('');
-//   setNotes('');
-//   onClose();
-// } catch (error) {
-//   console.error('Error scheduling call:', error);
-//   setSubmitError('An error occurred. Please try again later.');
-// } finally {
-//   setIsSubmitting(false);
-// }
+try {
+  const supabase = createClient();
+  const { error } = await supabase.from("schedule_call").insert({
+    name,
+    email,
+    scheduled_date: date,
+    scheduled_time: time,
+    notes: notes || null,
+  });
+  if (error) throw error;
 
-// Layout-only stand-in: simulate a network round trip so the loading
-// state is visible, then just report success without touching Supabase.
-setTimeout(() => {
-onSubmit({ name, email, date, time, notes });
-toast.success('Call scheduled! (placeholder — Supabase not connected)');
-setName('');
-setEmail('');
-setDate('');
-setTime('');
-setNotes('');
-setIsSubmitting(false);
-onClose();
-}, 800);
+  toast.success("Call request sent. We will contact you soon.");
+  setName("");
+  setEmail("");
+  setDate("");
+  setTime("");
+  setNotes("");
+  onClose();
+} catch (error: unknown) {
+  setSubmitError(
+    error instanceof Error
+      ? error.message
+      : "Could not send your request. Please try again."
+  );
+} finally {
+  setIsSubmitting(false);
+}
 };
 
 return (
@@ -354,12 +337,6 @@ company: "Top 10 Financial Institution"
 
 const handleSchedule = () => {
 setIsModalOpen(true);
-};
-
-const handleModalSubmit = (data: { name: string; email: string; date: string; time: string; notes: string }) => {
-// The modal already handles the (stubbed) submission itself; this is just
-// a hook if you want to react to a successful schedule elsewhere on the page.
-console.log("Call Scheduled Data:", data);
 };
 
 return (
@@ -711,7 +688,6 @@ We reserve the right to reject advertising that conflicts with our editorial mis
 <ScheduleCallModal
 isOpen={isModalOpen}
 onClose={() => setIsModalOpen(false)}
-onSubmit={handleModalSubmit}
 />
 </>
 );

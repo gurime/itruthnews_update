@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Check,
@@ -17,6 +17,7 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import toast, { Toaster } from 'react-hot-toast';
+import { createClient } from '../utils/supabase/client';
 
 type BillingPeriod = 'monthly' | 'yearly';
 
@@ -60,13 +61,6 @@ const iconMap: Record<IconName, React.ComponentType<{ className?: string }>> = {
   Users,
   Gift,
 };
-
-// Flip this to `true` temporarily to preview the "signed-in" layout
-// (Free tier shows "Current Plan", Premium goes straight to checkout)
-// while auth isn't wired up yet. Leave `false` for the real logged-out view,
-// where Premium routes to sign-up first — see the design note above about
-// why membership specifically needs an account, unlike Contact/Feedback.
-const PREVIEW_AS_LOGGED_IN = false;
 
 const plans: PlanDefinition[] = [
   {
@@ -214,8 +208,29 @@ export default function MembershipPage() {
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly');
   const [loading, setLoading] = useState(false);
   const [showAllPremiumFeatures, setShowAllPremiumFeatures] = useState(false);
-  // Stand-in for real auth state (see PREVIEW_AS_LOGGED_IN above).
-  const isLoggedIn = PREVIEW_AS_LOGGED_IN;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    let supabase;
+    try {
+      supabase = createClient();
+    } catch {
+      return;
+    }
+
+    let active = true;
+    supabase.auth.getUser().then(({ data }) => {
+      if (active) setIsLoggedIn(Boolean(data.user));
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => setIsLoggedIn(Boolean(session?.user))
+    );
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const handleSubscribe = async (priceId: string, subscriptionStatus: string) => {
     setLoading(true);
