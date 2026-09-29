@@ -38,10 +38,11 @@ height={50}
 style={{ width: "auto" ,height:"auto"}}
 
 className="mb-4 cursor-pointer"/>
-
+<input type="text" placeholder="Enter your email" className="bg-blue-800 text-blue-100 placeholder:text-blue-400 border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
 <p className="text-blue-100 text-sm">
 Delivering accurate coverage you can rely on. Stay informed with truly clear reporting.
 </p>
+
 </div>
 
 {/* Company */}

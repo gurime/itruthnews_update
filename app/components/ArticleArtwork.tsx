@@ -8,7 +8,7 @@ Landmark,
 Mic2,
 Palette,
 } from "lucide-react";
-import type { ArticleCategory } from "../ArticleData";
+import type { ArticleCategory } from "../DashboardArticleData";
 
 const categoryArtwork: Record<
 ArticleCategory,
@@ -74,7 +74,7 @@ const Icon = artwork.icon;
 
 return (
 <div
-className={`relative isolate overflow-hidden bg-linear-to-br ${artwork.background} ${className}`}
+className={`relative isolate bg-linear-to-br ${artwork.background} ${className}`}
 role="img"
 aria-label={`${category} illustration for ${title}`}
 >
@@ -82,10 +82,11 @@ aria-label={`${category} illustration for ${title}`}
 <Image
 src={image}
 alt={title}
-fill
-sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-loading='eager'
-className="object-cover mx-auto"
+width={1200}
+height={1600}
+sizes="100vw"
+loading="eager"
+className="object-cover  object-center"
 />
 ) : (
 <>

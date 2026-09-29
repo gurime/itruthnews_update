@@ -43,7 +43,7 @@ isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
 {section.links.map((link) => (
 <Link
 key={link.href}
-href={link.href}
+href={link.href.startsWith("./") ? link.href.slice(1) : link.href}
 className="block py-2 px-2 hover:bg-blue-600 rounded"
 >
 {link.label}

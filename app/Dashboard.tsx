@@ -3,7 +3,7 @@
 import { useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { ArrowRight, Lock } from "lucide-react";
-import { articles, articleCategories, type Article } from "./ArticleData";
+import { articles, articleCategories, type Article } from "./DashboardArticleData";
 import ArticleArtwork from "./components/ArticleArtwork";
 import { PaywallModal } from "./components/PaywallModal";
 

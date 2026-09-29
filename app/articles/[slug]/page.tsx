@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Lock } from "lucide-react";
-import { articles } from "../../ArticleData";
+import { ChevronRight, Home, Lock } from "lucide-react";
+import { articles as dashboardArticles } from "../../DashboardArticleData";
+import { articles as politicsArticles } from "../../politics/PoliticsArticleData";
 import ArticleArtwork from "../../components/ArticleArtwork";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
@@ -11,10 +12,12 @@ interface PageProps {
 params: Promise<{ slug: string }>;
 }
 
+const allArticles = [...dashboardArticles, ...politicsArticles];
+
 // 1. Dynamic SEO Metadata Generation
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
 const { slug } = await params;
-const article = articles.find((item) => item.slug === slug);
+const article = allArticles.find((item) => item.slug === slug);
 
 if (!article) return {};
 
@@ -43,23 +46,79 @@ timeZone: "UTC", // Prevents timezone hydration shifts
 });
 }
 
+function getRelatedArticles(articleSlug: string, category: string) {
+const candidates = allArticles
+.filter((item) => item.slug !== articleSlug)
+.sort(
+(first, second) =>
+new Date(second.publishedAt).getTime() -
+new Date(first.publishedAt).getTime(),
+);
+
+return [
+...candidates.filter((item) => item.category === category),
+...candidates.filter((item) => item.category !== category),
+].slice(0, 3);
+}
+
+const categoryMap: Record<string, string> = {
+Politics: "politics",
+Economy: "economy",
+World: "world",
+Technology: "technology",
+Opinion: "opinion",
+Environment: "environment",
+Culture: "culture",
+};
+
+const getCategoryPath = (cat: string) => {
+const normalized = cat.toLowerCase().trim();
+return categoryMap[normalized] || normalized.replace(/\s+/g, "-");
+};
+
+function Breadcrumb({ category, title }: { category: string; title: string }) {
+return (
+<nav
+aria-label="Breadcrumb"
+className="mb-6 flex min-w-0 items-center gap-2 overflow-hidden text-sm text-[#596a6d]"
+>
+<Link
+href="/"
+aria-label="Home"
+className="inline-flex shrink-0 items-center gap-1.5 transition hover:text-[#b24936]"
+>
+<Home aria-hidden="true" size={15} />
+<span>Home</span>
+</Link>
+<ChevronRight aria-hidden="true" className="shrink-0" size={14} />
+<Link
+href={`/${getCategoryPath(category)}`}
+className="shrink-0 hover:text-[#b24936]"
+>
+{category}
+</Link>
+<ChevronRight aria-hidden="true" className="shrink-0" size={14} />
+<span aria-current="page" className="truncate font-medium text-[#182d35]">
+{title}
+</span>
+</nav>
+);
+}
+
 export default async function ArticlePage({ params }: PageProps) {
 const { slug } = await params;
-const article = articles.find((item) => item.slug === slug);
+const article = allArticles.find((item) => item.slug === slug);
 
 if (!article) notFound();
+
+const relatedArticles = getRelatedArticles(article.slug, article.category);
 
 return (
 <>
 <Navbar />
 <main className="flex-1 bg-[#f6f5f0] px-5 py-10 text-[#182d35] sm:px-8 sm:py-14">
 <article className="mx-auto max-w-4xl">
-<Link
-className="text-sm text-[#596a6d] transition hover:text-[#b24936]"
-href="/"
->
-← Back to headlines
-</Link>
+<Breadcrumb category={article.category} title={article.title} />
 <div className="mt-7">
 <ArticleArtwork
 category={article.category}
@@ -110,6 +169,44 @@ key={index}
 </div>
 )}
 </article>
+<section
+aria-labelledby="related-articles-heading"
+className="mx-auto mt-6 max-w-4xl border-t border-[#d7d7cf] pt-8 sm:mt-10 sm:pt-10"
+>
+<div className="mb-5">
+<p className="font-mono text-xs uppercase tracking-[0.18em] text-[#b24936]">
+Keep reading
+</p>
+<h2
+id="related-articles-heading"
+className="mt-2 font-serif text-2xl sm:text-3xl"
+>
+Related stories
+</h2>
+</div>
+<div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+{relatedArticles.map((relatedArticle) => (
+<Link
+key={relatedArticle.id}
+href={`/articles/${relatedArticle.slug}`}
+className="group min-w-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b24936]"
+>
+<ArticleArtwork
+category={relatedArticle.category}
+title={relatedArticle.title}
+image={relatedArticle.image}
+className="aspect-video transition-transform duration-300 group-hover:brightness-105"
+/>
+<p className="mt-3 font-mono text-xs uppercase tracking-[0.12em] text-[#b24936]">
+{relatedArticle.category} <span aria-hidden="true">·</span> {relatedArticle.readTime}
+</p>
+<h3 className="mt-1 font-serif text-lg leading-snug transition-colors group-hover:text-[#b24936]">
+{relatedArticle.title}
+</h3>
+</Link>
+))}
+</div>
+</section>
 </main>
 <Footer />
 </>
