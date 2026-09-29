@@ -82,7 +82,7 @@ aria-label={`${category} illustration for ${title}`}
 <Image
 src={image}
 alt={title}
-width={1200}
+width={2000}
 height={1600}
 sizes="100vw"
 loading="eager"
