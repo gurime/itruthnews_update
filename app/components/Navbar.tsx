@@ -147,31 +147,28 @@ href: c.href,
 };
 });
 
-const logoSrc = isEliteMember
-? "/images/itruthnews_elite.png"
-: isSubscribed
+const logoSrc = isSubscribed
 ? "/images/itruthnews_premium.png"
 : "/images/itruthnews.png";
-const logoAlt = isEliteMember
-? "iTruth News Elite Logo"
-: isSubscribed
+const logoAlt = isSubscribed
 ? "iTruth News Premium Logo"
 : "iTruth News Logo";
 const subscriptionLabel = subscriptionStatus
-	.split("_")
-	.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-	.join(" ");
+.split("_")
+.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+.join(" ");
 
 const renderDropdown = (item: (typeof menuItems)[number]) => (
 <NavDropdown
 key={item.id}
 item={item}
 isOpen={openDropdownId === item.id}
+isSubscribed={isSubscribed}
 onOpen={() => setOpenDropdownId(item.id)}
 onClose={() =>
 setOpenDropdownId((curr) => (curr === item.id ? null : curr))
 }
-disabled={item.disabled || (item.eliteOnly && !isEliteMember)}
+disabled={item.disabled || (item.isSubscribed && !isSubscribed)}
 panelAlign={item.align ?? "left"}
 />
 );
@@ -259,9 +256,9 @@ src={logoSrc}
 loading="eager"
 priority
 alt={logoAlt}
-width={200}
-height={200}
-style={{ width: "auto", height: "auto" }}
+width={isSubscribed ? 2209 : 3431}
+height={isSubscribed ? 516 : 402}
+className="h-auto w-70"
 />
 </Link>
 </div>
@@ -275,15 +272,16 @@ style={{ width: "auto", height: "auto" }}
 <div className="md:hidden">
 <div className="flex items-center justify-between p-6">
 <div className="shrink-0">
+
 <Link href="/">
 <Image
 src={logoSrc}
 loading="eager"
 priority
 alt={logoAlt}
-width={200}
-height={200}
-className="mx-auto"
+width={isSubscribed ? 2209 : 3431}
+height={isSubscribed ? 516 : 402}
+className="mx-auto h-auto w-50 max-w-full"
 />
 </Link>
 </div>

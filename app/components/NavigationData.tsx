@@ -42,7 +42,7 @@ links: [
 {
 id: "business",
 label: "iTruth Business",
-eliteOnly: true,
+isSubscribed: true,
 panelWidth: "w-96",
 sections: [
 {

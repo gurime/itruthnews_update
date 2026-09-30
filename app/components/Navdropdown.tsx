@@ -9,6 +9,7 @@ import type { NavMenuItem } from "../utils/Types";
 interface NavDropdownProps {
 item: NavMenuItem;
 isOpen: boolean;
+isSubscribed?: boolean;
 disabled?: boolean;
 onOpen: () => void;
 onClose: () => void;
@@ -21,6 +22,7 @@ panelAlign?: "left" | "right";
 export default function NavDropdown({
 item,
 isOpen,
+isSubscribed = false,
 disabled = false,
 onOpen,
 onClose,
@@ -88,6 +90,8 @@ title={isDisabled ? `Upgrade to access ${item.label}` : undefined}
 className={`font-bold whitespace-nowrap flex items-center transition-opacity ${
 isDisabled
 ? "text-white/40 cursor-not-allowed pointer-events-none"
+: item.id === "business" && isSubscribed
+? "text-emerald-300 hover:text-emerald-200 hover:underline decoration-2 cursor-pointer"
 : "text-white hover:underline decoration-2 cursor-pointer"
 }`}
 >

@@ -5,8 +5,10 @@ import { ChevronRight, Home, Lock } from "lucide-react";
 import { articles as dashboardArticles } from "../../DashboardArticleData";
 import { articles as politicsArticles } from "../../politics/PoliticsArticleData";
 import ArticleArtwork from "../../components/ArticleArtwork";
+import ArticleEngagement from "../../components/ArticleEngagement";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
+import Goback from "@/app/components/GoBack";
 
 interface PageProps {
 params: Promise<{ slug: string }>;
@@ -78,9 +80,10 @@ return categoryMap[normalized] || normalized.replace(/\s+/g, "-");
 
 function Breadcrumb({ category, title }: { category: string; title: string }) {
 return (
+<div className="mb-6 flex min-w-0 items-center justify-between gap-4">
 <nav
 aria-label="Breadcrumb"
-className="mb-6 flex min-w-0 items-center gap-2 overflow-hidden text-sm text-[#596a6d]"
+className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-sm text-[#596a6d]"
 >
 <Link
 href="/"
@@ -102,6 +105,8 @@ className="shrink-0 hover:text-[#b24936]"
 {title}
 </span>
 </nav>
+<Goback />
+</div>
 );
 }
 
@@ -168,6 +173,11 @@ key={index}
 ))}
 </div>
 )}
+<ArticleEngagement
+slug={article.slug}
+title={article.title}
+excerpt={article.excerpt}
+/>
 </article>
 <section
 aria-labelledby="related-articles-heading"

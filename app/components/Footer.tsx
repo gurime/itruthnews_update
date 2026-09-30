@@ -2,14 +2,64 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
+import { createClient } from '../utils/supabase/client';
 
 export default function Footer() {
 const [openSection, setOpenSection] = useState<string | null>(null);
 const [newsletterEmail, setNewsletterEmail] = useState('');
 const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 const [newsletterError, setNewsletterError] = useState('');
+const [isPremiumMember, setIsPremiumMember] = useState(false);
+
+useEffect(() => {
+const supabase = createClient();
+let mounted = true;
+
+const loadProfile = async (userId: string) => {
+const { data: profile, error } = await supabase
+.from('profiles')
+.select('subscription_status, role')
+.eq('id', userId)
+.maybeSingle();
+
+if (!mounted) return;
+setIsPremiumMember(
+!error && !!profile &&
+(profile.subscription_status !== 'free' || profile.role === 'admin'),
+);
+};
+
+const loadSession = async () => {
+const { data: { session } } = await supabase.auth.getSession();
+if (!mounted) return;
+
+if (session?.user) {
+await loadProfile(session.user.id);
+} else {
+setIsPremiumMember(false);
+}
+};
+
+void loadSession();
+
+const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+if (!mounted) return;
+
+if (event === 'SIGNED_OUT' || !session?.user) {
+setIsPremiumMember(false);
+} else {
+void loadProfile(session.user.id);
+}
+});
+
+return () => {
+mounted = false;
+subscription.unsubscribe();
+};
+}, []);
+
 const toggleSection = (section: string) => {
 setOpenSection((current) => current === section ? null : section);
 };
@@ -36,6 +86,7 @@ throw new Error(result?.error ?? 'Newsletter signup failed. Please try again.');
 setNewsletterEmail('');
 setNewsletterError('');
 setNewsletterStatus('success');
+setTimeout(() => setNewsletterStatus('idle'), 3000);
 } catch (error) {
 setNewsletterError(error instanceof Error ? error.message : 'Please try again later.');
 setNewsletterStatus('error');
@@ -49,13 +100,13 @@ return (
 <div>
 <Link href="/" aria-label="iTruth News home" className="inline-block">
 <Image
-src="/images/itruthnews.png"
-alt="iTruth News"
+src={isPremiumMember ? '/images/itruthnews_premium.png' : '/images/itruthnews.png'}
+alt={isPremiumMember ? 'iTruth News Premium' : 'iTruth News'}
 loading="eager"
 priority
-width={150}
-height={50}
-className="mb-5 h-auto w-auto"
+width={isPremiumMember ? 2209 : 3431}
+height={isPremiumMember ? 516 : 402}
+className="mb-5 h-auto w-50 max-w-full"
 />
 </Link>
 <h2 className="font-serif text-xl">The free iTruth briefing</h2>

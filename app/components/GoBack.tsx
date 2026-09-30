@@ -1,18 +1,18 @@
 'use client'
+import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function Goback() {
 const router = useRouter()
 
 return (
-<div>
-<button 
+<button
+type="button"
 onClick={() => router.back()}
-className="inline-block bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase cursor-pointer"
+className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-[#1577c2] transition-colors hover:text-[#b24936]"
 >
-← Go Back
+<ArrowLeft aria-hidden="true" size={16} />
+Go back
 </button>
-
-</div>
 )
 }

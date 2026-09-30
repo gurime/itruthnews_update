@@ -14,7 +14,7 @@ export interface NavMenuItem {
   label: string;
   sections: NavSection[];
   /** If true, item renders as a locked upsell link unless the user is an elite member */
-  eliteOnly?: boolean;
+  isSubscribed?: boolean;
   /** If true, item is disabled and cannot be clicked */
   disabled?: boolean;
   /** Tailwind width class for the dropdown panel, e.g. "w-96" */
