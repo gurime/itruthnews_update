@@ -82,11 +82,10 @@ aria-label={`${category} illustration for ${title}`}
 <Image
 src={image}
 alt={title}
-width={2000}
-height={1600}
-sizes="100vw"
+width={1000}
+height={100}
 loading="eager"
-className="object-cover  object-center"
+className=" h-full w-full object-fill object-center"
 />
 ) : (
 <>

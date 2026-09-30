@@ -187,7 +187,7 @@ Related stories
 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
 {relatedArticles.map((relatedArticle) => (
 <Link
-key={relatedArticle.id}
+key={relatedArticle.slug}
 href={`/articles/${relatedArticle.slug}`}
 className="group min-w-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b24936]"
 >

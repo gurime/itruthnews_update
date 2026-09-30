@@ -136,7 +136,7 @@ const plans: PlanDefinition[] = [
         shortLabel: 'Content',
         showByDefault: true,
         features: [
-          'Subscriber-only newsletters and briefings',
+          'Premium-only newsletters and briefings',
           'Complete archive dating back 10+ years',
           'Exclusive deep-dive reports and whitepapers',
           'Early access to major investigations',

@@ -12,7 +12,7 @@ variant: "limit-reached" | "premium-content";
 const premiumFeatures = [
 "Unlimited articles across all sections",
 "Ad-free reading on all devices",
-"Subscriber-only newsletters and briefings",
+"Premium-only newsletters and briefings",
 "Complete archive access",
 ];
 

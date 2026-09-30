@@ -94,7 +94,7 @@ Read story <ArrowRight aria-hidden="true" size={16} />
 </div>
 
 {/* Wrapped artwork container with zoom effect on hover */}
-<div className="relative order-first aspect-4/3 w-full overflow-hidden sm:aspect-16/10 md:order-0 md:aspect-auto md:min-h-120">
+<div className="relative order-first aspect-4/3 w-full overflow-hidden sm:aspect-16/10 md:order-0 md:aspect-auto md:min-h-96">
 <ArticleArtwork
 category={featuredArticle.category}
 title={featuredArticle.title}

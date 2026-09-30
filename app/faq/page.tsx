@@ -79,7 +79,7 @@ import Footer from "../components/Footer";
   {
   category: "content",
   question: "Do you have a newsletter?",
-  answer: "Yes! We offer several newsletters covering different topics. You can subscribe to our daily news briefing, weekly analysis, and specialized newsletters on politics, technology, and more. Manage your newsletter preferences in your account settings."
+  answer: "Yes. You can join our free newsletter using the signup form in the footer. Premium members may also receive exclusive newsletters and briefings."
   },
   {
   category: "content",

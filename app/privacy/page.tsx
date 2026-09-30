@@ -103,7 +103,7 @@ text: "You may request deletion of your personal information, subject to certain
 },
 {
 subtitle: "Opt-Out of Marketing",
-text: "You can unsubscribe from marketing emails by clicking the unsubscribe link in any marketing message or by updating your preferences in your account settings."
+text: "You can request removal from our newsletter or marketing lists by contacting us through the Contact page."
 },
 {
 subtitle: "Do Not Track",
