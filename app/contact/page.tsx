@@ -11,6 +11,7 @@ Send,
 Clock,
 Users,
 Shield,
+LoaderIcon,
 Star,
 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
@@ -39,17 +40,28 @@ return;
 }
 let active = true;
 
+const loadProfileName = async (userId: string) => {
+const { data } = await supabase
+.from("profiles")
+.select("full_name")
+.eq("id", userId)
+.maybeSingle();
+if (!active) return;
+if (data?.full_name) setFullName(data.full_name);
+};
+
 const applyUser = (nextUser: User | null) => {
 if (!active) return;
 setUser(nextUser);
 if (nextUser?.email) setEmail(nextUser.email);
-const name = nextUser?.user_metadata?.full_name;
-if (typeof name === "string") setFullName(name);
+if (nextUser) void loadProfileName(nextUser.id);
 };
 
 supabase.auth.getUser().then(({ data }) => applyUser(data.user));
-const { data: { subscription } } = supabase.auth.onAuthStateChange(
-(_event, session) => applyUser(session?.user ?? null)
+const {
+data: { subscription },
+} = supabase.auth.onAuthStateChange((_event, session) =>
+applyUser(session?.user ?? null)
 );
 
 return () => {
@@ -97,12 +109,14 @@ setRating(0);
 toast.success(
 "Your message has been sent. We’ll get back to you within 24–48 hours."
 );
+setTimeout(() => toast.dismiss(), 3000);
 } catch (error: unknown) {
 toast.error(
 error instanceof Error
 ? error.message
 : "Something went wrong. Please try again."
 );
+setTimeout(() => toast.dismiss(), 3000);
 } finally {
 setIsSubmitting(false);
 }
@@ -249,7 +263,6 @@ id="fullName"
 type="text"
 value={fullName}
 onChange={(e) => setFullName(e.target.value)}
-placeholder="John Doe"
 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
 />
 </div>
@@ -288,7 +301,7 @@ className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus
 >
 {categories.map((cat) => (
 <option key={cat.value} value={cat.value}>
-  {cat.label}
+{cat.label}
 </option>
 ))}
 </select>
@@ -302,27 +315,27 @@ Overall Rating (Optional)
 <div className="flex gap-2 items-center">
 {[1, 2, 3, 4, 5].map((star) => (
 <button
-  key={star}
-  type="button"
-  onClick={() => setRating(star)}
-  className="focus:outline-none"
+key={star}
+type="button"
+onClick={() => setRating(star)}
+className="focus:outline-none"
 >
-  <Star
-    className={`w-8 h-8 ${
-      star <= rating
-        ? "fill-yellow-400 text-yellow-400"
-        : "text-gray-300"
-    }`}
-  />
+<Star
+className={`w-8 h-8 ${
+star <= rating
+? "fill-yellow-400 text-yellow-400"
+: "text-gray-300"
+}`}
+/>
 </button>
 ))}
 {rating > 0 && (
 <button
-  type="button"
-  onClick={() => setRating(0)}
-  className="ml-2 text-sm text-gray-600 hover:text-gray-800"
+type="button"
+onClick={() => setRating(0)}
+className="ml-2 text-sm text-gray-600 hover:text-gray-800"
 >
-  Clear
+Clear
 </button>
 )}
 </div>
@@ -377,31 +390,15 @@ isSubmitting
 >
 {isSubmitting ? (
 <>
-<svg
-  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-  xmlns="http://www.w3.org/2000/svg"
-  fill="none"
-  viewBox="0 0 24 24"
->
-  <circle
-    className="opacity-25"
-    cx="12"
-    cy="12"
-    r="10"
-    stroke="currentColor"
-    strokeWidth="4"
-  ></circle>
-  <path
-    className="opacity-75"
-    fill="currentColor"
-    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-  ></path>
-</svg>
+<LoaderIcon
+aria-hidden="true"
+className="mr-2 h-5 w-5 animate-spin"
+/>{" "}
 Sending...
 </>
 ) : (
 <>
-<Send className="w-5 h-5 mr-2" />
+<Send aria-hidden="true" className="mr-2 h-5 w-5" />{" "}
 Send Message
 </>
 )}

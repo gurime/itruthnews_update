@@ -12,6 +12,7 @@ const [newsletterEmail, setNewsletterEmail] = useState('');
 const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 const [newsletterError, setNewsletterError] = useState('');
 const [isPremiumMember, setIsPremiumMember] = useState(false);
+const [premiumProfileId, setPremiumProfileId] = useState<string | null>(null);
 
 useEffect(() => {
 const supabase = createClient();
@@ -25,10 +26,10 @@ const { data: profile, error } = await supabase
 .maybeSingle();
 
 if (!mounted) return;
-setIsPremiumMember(
-!error && !!profile &&
-(profile.subscription_status !== 'free' || profile.role === 'admin'),
-);
+const isPremium = !error && !!profile &&
+(profile.subscription_status !== 'free' || profile.role === 'admin');
+setIsPremiumMember(isPremium);
+setPremiumProfileId(isPremium ? userId : null);
 };
 
 const loadSession = async () => {
@@ -39,6 +40,7 @@ if (session?.user) {
 await loadProfile(session.user.id);
 } else {
 setIsPremiumMember(false);
+setPremiumProfileId(null);
 }
 };
 
@@ -49,6 +51,7 @@ if (!mounted) return;
 
 if (event === 'SIGNED_OUT' || !session?.user) {
 setIsPremiumMember(false);
+setPremiumProfileId(null);
 } else {
 void loadProfile(session.user.id);
 }
@@ -109,10 +112,20 @@ height={isPremiumMember ? 516 : 402}
 className="mb-5 h-auto w-50 max-w-full"
 />
 </Link>
-<h2 className="font-serif text-xl">The free iTruth briefing</h2>
+<h2 className="font-serif text-xl">{isPremiumMember ? 'Your iTruth briefings' : 'The free iTruth briefing'}</h2>
 <p className="mt-2 max-w-sm text-sm leading-6 text-white/70">
-Independent reporting and the stories worth your time. No membership required.
+{isPremiumMember
+? 'Manage delivery of the free briefing and member-only briefings from your account.'
+: 'Independent reporting and the stories worth your time. No membership required.'}
 </p>
+{isPremiumMember && premiumProfileId ? (
+<div className="mt-5 max-w-md border-t border-white/20 pt-4">
+<Link className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-[#f0c882] underline underline-offset-4 hover:text-white" href={`/profile/${premiumProfileId}`}>
+Manage email preferences
+<ArrowRight aria-hidden="true" size={16} />
+</Link>
+</div>
+) : (
 <form className="mt-5 max-w-md" onSubmit={handleNewsletterSubmit}>
 <label className="mb-2 block text-sm font-medium" htmlFor="footer-newsletter-email">
 Email address
@@ -155,6 +168,7 @@ type="text"
 {newsletterStatus === 'error' && newsletterError}
 </p>
 </form>
+)}
 </div>
 
 {/* Company */}

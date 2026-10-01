@@ -31,6 +31,7 @@ setShowPaywall(true);
 
 return (
 <>
+
 <main className="bg-[#f6f5f0] text-[#182d35]">
 <div className="mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8 lg:px-12">
 <div className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-[#d7d7cf] pb-4 font-mono text-[11px] uppercase tracking-[0.15em] text-[#596a6d]">
