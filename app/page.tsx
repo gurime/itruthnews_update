@@ -4,10 +4,10 @@ import Dashboard from "./Dashboard";
 
 export default function Home() {
 return (
-    <>
-        <Navbar/>
-        <Dashboard/>
-        <Footer/>
-    </>
+<>
+<Navbar/>
+<Dashboard/>
+<Footer/>
+</>
 );
 }

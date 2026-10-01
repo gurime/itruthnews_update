@@ -4,8 +4,8 @@ import { ChevronRight, Home } from "lucide-react";
 import {
 articles as dashboardArticles,
 type ArticleCategory,
-} from "../DashboardArticleData";
-import { articles as politicsArticles } from "../politics/PoliticsArticleData";
+} from "../ArticleData/DashboardArticleData";
+import { articles as politicsArticles } from "../ArticleData/PoliticsArticleData";
 import ArticleArtwork from "../components/ArticleArtwork";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";

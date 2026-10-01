@@ -8,7 +8,7 @@ Landmark,
 Mic2,
 Palette,
 } from "lucide-react";
-import type { ArticleCategory } from "../DashboardArticleData";
+import type { ArticleCategory } from "../ArticleData/DashboardArticleData";
 
 const categoryArtwork: Record<
 ArticleCategory,
