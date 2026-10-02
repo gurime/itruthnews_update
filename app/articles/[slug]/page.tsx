@@ -1,20 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { ChevronRight, Home, Lock } from "lucide-react";
 import { articles as dashboardArticles } from "../../ArticleData/DashboardArticleData";
 import { articles as politicsArticles } from "../../ArticleData/PoliticsArticleData";
+import { articles as businessArticles } from "../../ArticleData/BusinessArticleData";
 import ArticleArtwork from "../../components/ArticleArtwork";
 import ArticleEngagement from "../../components/ArticleEngagement";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Goback from "@/app/components/GoBack";
+import { createClient } from "../../utils/supabase/server";
 
 interface PageProps {
 params: Promise<{ slug: string }>;
 }
 
-const allArticles = [...dashboardArticles, ...politicsArticles];
+const allArticles = [...dashboardArticles, ...politicsArticles, ...businessArticles];
 
 // 1. Dynamic SEO Metadata Generation
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -116,6 +119,23 @@ const article = allArticles.find((item) => item.slug === slug);
 
 if (!article) notFound();
 
+let isPremiumMember = false;
+if (article.premium) {
+const supabase = createClient(await cookies());
+const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+if (!userError && user) {
+const { data: profile, error: profileError } = await supabase
+.from("profiles")
+.select("subscription_status, role")
+.eq("id", user.id)
+.maybeSingle();
+
+isPremiumMember = !profileError && !!profile &&
+(profile.subscription_status !== "free" || profile.role === "admin");
+}
+}
+
 const relatedArticles = getRelatedArticles(article.slug, article.category);
 
 return (
@@ -146,7 +166,7 @@ className="aspect-2/1"
 By {article.author} · {formatDate(article.publishedAt)}
 </p>
 </header>
-{article.premium ? (
+{article.premium && !isPremiumMember ? (
 <section className="mx-auto max-w-3xl border-y border-[#d7d7cf] py-9">
 <Lock aria-hidden="true" className="text-[#b24936]" size={22} />
 <h2 className="mt-4 font-serif text-2xl">A member-only story</h2>

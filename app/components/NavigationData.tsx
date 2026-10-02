@@ -43,7 +43,8 @@ links: [
 id: "business",
 label: "iTruth Business",
 isSubscribed: true,
-panelWidth: "w-96",
+panelWidth: "w-[52rem]",
+align: "left",
 sections: [
 {
 id: "markets",
@@ -57,6 +58,44 @@ links: [
 { label: "Bonds", href: "./markets/bonds" },
 { label: "ETFs", href: "./markets/etfs" },
 { label: "Mutual Funds", href: "./markets/mutual-funds" },
+],
+},
+
+{
+id: "business",
+label: "Business",
+links: [
+{ label: "Companies", href: "./business/companies" },
+{ label: "Earnings", href: "./business/earnings" },
+{ label: "Economy", href: "./business/economy" },
+{ label: "Industries", href: "./business/industries" },
+{ label: "Startups", href: "./business/startups" },
+{ label: "Technology", href: "./business/technology" },
+{ label: "Mergers & Acquisitions", href: "./business/mergers" },
+],
+},
+
+{
+id: "money",
+label: "Money",
+links: [
+{ label: "Personal Finance", href: "./money/personal-finance" },
+{ label: "Banking", href: "./money/banking" },
+{ label: "Investing", href: "./money/investing" },
+{ label: "Retirement", href: "./money/retirement" },
+{ label: "Taxes", href: "./money/taxes" },
+{ label: "Real Estate", href: "./money/real-estate" },
+],
+},
+
+{
+id: "premium",
+label: "iTruth Business",
+links: [
+{ label: "Market Briefing", href: "./business/briefing" },
+{ label: "Business Interviews", href: "./business/interviews" },
+{ label: "Market Analysis", href: "./business/analysis" },
+{ label: "Economic Calendar", href: "./business/economic-calendar" },
 ],
 },
 ],

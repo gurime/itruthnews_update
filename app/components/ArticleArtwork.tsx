@@ -24,6 +24,11 @@ icon: BarChart3,
 background: "from-[#183c33] via-[#39745e] to-[#d3b46e]",
 accent: "bg-[#e3c47d]",
 },
+Business: {
+icon: BarChart3,
+background: "from-[#263c45] via-[#54706b] to-[#c9a96e]",
+accent: "bg-[#e3c47d]",
+},
 World: {
 icon: Globe2,
 background: "from-[#143a50] via-[#357a86] to-[#e2a276]",
@@ -89,7 +94,7 @@ className=" h-full w-full object-fill object-center"
 />
 ) : (
 <>
-<div className="absolute -right-10 -top-14 h-64 w-64 rounded-full border border-white/25" />
+<div className="absolute -right-10 -top-14  rounded-full border border-white/25" />
 <div className="absolute -right-2 -top-6 h-48 w-48 rounded-full border border-white/20" />
 <div
 className={`absolute bottom-0 right-[18%] h-[68%] w-[24%] -skew-x-12 ${artwork.accent} opacity-75`}

@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 import { ChevronRight, Home } from "lucide-react";
 import {
 articles as dashboardArticles,
-type ArticleCategory,
 } from "../ArticleData/DashboardArticleData";
 import { articles as politicsArticles } from "../ArticleData/PoliticsArticleData";
+import {
+articles as businessArticles,
+type ArticleCategory,
+} from "../ArticleData/BusinessArticleData";
 import ArticleArtwork from "../components/ArticleArtwork";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
@@ -32,7 +35,6 @@ links.map((link) => ({ path: normalizePath(link.href), label: link.label })),
 const categoryRoutes: Array<[string, ArticleCategory]> = [
 ["/politics", "Politics"],
 ["/economy", "Economy"],
-["/markets", "Economy"],
 ["/world", "World"],
 ["/asia", "World"],
 ["/europe", "World"],
@@ -46,6 +48,8 @@ const categoryRoutes: Array<[string, ArticleCategory]> = [
 ["/culture", "Culture"],
 ["/climate", "Environment"],
 ["/environment", "Environment"],
+["/business", "Business"],
+["/markets", "Business"],
 ];
 
 function getCategory(path: string) {
@@ -73,13 +77,37 @@ const categoryAlias = categoryRoutes.some(([alias]) => alias === path);
 if (!route && !categoryAlias) notFound();
 
 const title = route?.label ?? formatLabel(section.at(-1) ?? "Section");
-const articles = [...dashboardArticles, ...politicsArticles]
+const allArticles = [...dashboardArticles, ...politicsArticles, ...businessArticles];
+const businessSection = path === "/markets" || path.startsWith("/markets/")
+? "markets"
+: path.startsWith("/business/")
+? section.at(-1)
+: undefined;
+const articles = allArticles
 .filter((article) => category && article.category === category)
+.filter((article) => {
+if (category !== "Business" || path === "/business" || !businessSection) return true;
+return "section" in article && article.section === businessSection;
+})
 .sort(
 (first, second) =>
 new Date(second.publishedAt).getTime() -
 new Date(first.publishedAt).getTime(),
 );
+const featuredArticle =
+category === "Business"
+? businessArticles.find((article) =>
+article.category === category &&
+article.featured &&
+(path === "/business" || !businessSection || article.section === businessSection),
+)
+: category === "Politics"
+? politicsArticles.find((article) => article.category === category && article.featured) ??
+dashboardArticles.find((article) => article.category === category && article.featured)
+: dashboardArticles.find((article) => category && article.category === category && article.featured);
+const otherArticles = featuredArticle
+? articles.filter((article) => article.slug !== featuredArticle.slug)
+: articles;
 
 return (
 <>
@@ -104,16 +132,54 @@ className="inline-flex items-center gap-1.5 transition hover:text-[#b24936]"
 </span>
 </nav>
 
-<header className="border-b border-[#c8cbc4] pb-6">
-<p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-[#b24936]">
-iTruth News
+<div className="mb-5 flex items-end justify-between gap-5">
+<div>
+<p className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-[#b24936]">
+The iTruth News Briefing
 </p>
-<h1 className="font-serif text-4xl sm:text-5xl">{title}</h1>
-</header>
+<h1 id="daily-briefing" className="max-w-3xl font-serif text-4xl leading-tight sm:text-5xl lg:text-6xl">
+What the headlines don&apos;t tell you.
+</h1>
+</div>
+<p className="hidden max-w-xs pb-1 text-sm leading-6 text-[#596a6d] md:block">
+Clear-eyed reporting on the decisions and people shaping what comes next.
+</p>
+</div>
 
 {articles.length > 0 ? (
+<>
+{featuredArticle && (
+<Link
+href={`/articles/${featuredArticle.slug}`}
+className="group mt-8 grid overflow-hidden rounded-sm bg-[#0b0f98] text-white md:grid-cols-[1.03fr_0.97fr]"
+>
+<div className="flex flex-col justify-between px-6 py-7">
+<div>
+<p className="mb-5 bg-[#b24936] font-mono text-[11px] uppercase tracking-[0.17em] text-white w-fit px-2.5 py-1">
+Editor&apos;s pick · {featuredArticle.category}
+</p>
+<h2 className="max-w-2xl font-serif text-3xl leading-tight transition-colors group-hover:text-[#f0c882] sm:text-4xl">
+{featuredArticle.title}
+</h2>
+<p className="mt-5 max-w-xl text-sm leading-6 text-white/75">
+{featuredArticle.excerpt}
+</p>
+</div>
+<p className="mt-8 border-t border-white/20 pt-4 text-xs text-white/70">
+{featuredArticle.author} · {featuredArticle.readTime}
+</p>
+</div>
+<ArticleArtwork
+category={featuredArticle.category}
+title={featuredArticle.title}
+image={featuredArticle.image}
+className="aspect-[1.55] h-full w-full md:aspect-auto"
+/>
+</Link>
+)}
+{otherArticles.length > 0 && (
 <div className="mt-8 grid gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
-{articles.map((article) => (
+{otherArticles.map((article) => (
 <Link
 key={article.slug}
 href={`/articles/${article.slug}`}
@@ -135,6 +201,8 @@ className="aspect-[1.55]"
 </Link>
 ))}
 </div>
+)}
+</>
 ) : (
 <p className="mt-8 border-l-2 border-[#b24936] pl-4 text-sm leading-6 text-[#596a6d]">
 There are no stories in this section yet.

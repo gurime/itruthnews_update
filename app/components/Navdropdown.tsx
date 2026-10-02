@@ -87,31 +87,28 @@ onClick={isDisabled ? undefined : () => (isOpen ? onClose() : onOpen())}
 aria-expanded={isOpen}
 aria-disabled={isDisabled}
 title={isDisabled ? `Upgrade to access ${item.label}` : undefined}
-className={`font-bold whitespace-nowrap flex items-center transition-opacity ${
+className={`font-bold whitespace-nowrap flex items-center transition-all duration-200 ${
 isDisabled
 ? "text-white/40 cursor-not-allowed pointer-events-none"
 : item.id === "business" && isSubscribed
-? "text-emerald-300 hover:text-emerald-200 hover:underline decoration-2 cursor-pointer"
+? "text-[#f5c451] hover:text-[#ffe08a] hover:underline decoration-2 cursor-pointer"
 : "text-white hover:underline decoration-2 cursor-pointer"
 }`}
 >
+<>
 {item.label}
-{isDisabled ? (
-<svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-<path
-fillRule="evenodd"
-d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-clipRule="evenodd"
-/>
-</svg>
-) : (
+{item.id === "business" && isSubscribed && (
+<span className="ml-2 rounded-sm border border-[#f5c451]/40 bg-[#f5c451]/10 px-1.5 py-0.5 text-[9px] font-bold tracking-[0.12em] text-[#f5c451]">
+PRO
+</span>
+)}
 <ChevronDown
 height={20}
 className={`ml-1 transition-transform duration-300 ${
 isOpen ? "rotate-180" : ""
 }`}
 />
-)}
+</>
 </button>
 
 {isOpen && !isDisabled && (

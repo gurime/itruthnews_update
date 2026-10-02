@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { ArrowRight, Lock } from "lucide-react";
 import { articles, articleCategories, type Article } from "./ArticleData/DashboardArticleData";
 import ArticleArtwork from "./components/ArticleArtwork";
 import { PaywallModal } from "./components/PaywallModal";
+import { createClient } from './utils/supabase/client';
+
 
 const formatDate = (date: string) =>
 new Date(date).toLocaleDateString("en-US", {
@@ -17,6 +19,8 @@ year: "numeric",
 export default function Dashboard() {
 const [selectedCategory, setSelectedCategory] = useState<string>("All");
 const [showPaywall, setShowPaywall] = useState(false);
+const [isPremiumMember, setIsPremiumMember] = useState(false);
+const [premiumProfileId, setPremiumProfileId] = useState<string | null>(null);
 const featuredArticle = articles.find((article) => article.featured) ?? articles[0];
 const latestArticles = articles.filter((article) => article.id !== featuredArticle.id);
 const visibleArticles = latestArticles.filter(
@@ -24,10 +28,60 @@ const visibleArticles = latestArticles.filter(
 );
 
 function handleArticleClick(event: MouseEvent<HTMLAnchorElement>, article: Article) {
-if (!article.premium) return;
+if (!article.premium || isPremiumMember) return;
 event.preventDefault();
 setShowPaywall(true);
 }
+
+
+useEffect(() => {
+const supabase = createClient();
+let mounted = true;
+
+const loadProfile = async (userId: string) => {
+const { data: profile, error } = await supabase
+.from('profiles')
+.select('subscription_status, role')
+.eq('id', userId)
+.maybeSingle();
+
+if (!mounted) return;
+const isPremium = !error && !!profile &&
+(profile.subscription_status !== 'free' || profile.role === 'admin');
+setIsPremiumMember(isPremium);
+setPremiumProfileId(isPremium ? userId : null);
+};
+
+const loadSession = async () => {
+const { data: { session } } = await supabase.auth.getSession();
+if (!mounted) return;
+
+if (session?.user) {
+await loadProfile(session.user.id);
+} else {
+setIsPremiumMember(false);
+setPremiumProfileId(null);
+}
+};
+
+void loadSession();
+
+const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+if (!mounted) return;
+
+if (event === 'SIGNED_OUT' || !session?.user) {
+setIsPremiumMember(false);
+setPremiumProfileId(null);
+} else {
+void loadProfile(session.user.id);
+}
+});
+
+return () => {
+mounted = false;
+subscription.unsubscribe();
+};
+}, []);
 
 return (
 <>
@@ -53,10 +107,10 @@ year: "numeric",
 <div className="mb-5 flex items-end justify-between gap-5">
 <div>
 <p className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-[#b24936]">
-The daily briefing
+The iTruth News Briefing
 </p>
 <h1 id="daily-briefing" className="max-w-3xl font-serif text-4xl leading-tight sm:text-5xl lg:text-6xl">
-The stories behind the headlines.
+What the headlines don't tell you.
 </h1>
 </div>
 <p className="hidden max-w-xs pb-1 text-sm leading-6 text-[#596a6d] md:block">
@@ -65,7 +119,7 @@ Clear-eyed reporting on the decisions and people shaping what comes next.
 </div>
 
 <Link
-className="group grid overflow-hidden rounded-sm bg-[#122d39] text-white md:grid-cols-[1.03fr_0.97fr]"
+className="group grid overflow-hidden rounded-sm bg-[#0b0f98] text-white md:grid-cols-[1.03fr_0.97fr]"
 href={`/articles/${featuredArticle.slug}`}
 onClick={(event) => handleArticleClick(event, featuredArticle)}
 >
@@ -73,7 +127,7 @@ onClick={(event) => handleArticleClick(event, featuredArticle)}
 <div>
 <div className="mb-7 flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.17em]">
 <span className="bg-[#b24936] px-2.5 py-1 text-white">Editor&apos;s pick</span>
-<span className="text-white/65">{featuredArticle.category}</span>
+<span className="text-white">{featuredArticle.category}</span>
 {featuredArticle.premium && <Lock aria-label="Premium article" size={14} />}
 </div>
 <h2 className="max-w-2xl font-serif text-3xl leading-tight transition-colors group-hover:text-[#f0c882] sm:text-4xl lg:text-5xl">
@@ -113,7 +167,7 @@ className="absolute inset-0 h-full w-full transition-transform duration-500 grou
 {articleCategories.map((category) => (
 <button
 aria-pressed={selectedCategory === category}
-className={`shrink-0 border px-3 py-2 text-xs transition ${
+className={`shrink-0 border px-3 py-2 text-xs transition cursor-pointer ${
 selectedCategory === category
 ? "border-[#183946] bg-[#183946] text-white"
 : "border-[#c8cbc4] text-[#43555a] hover:border-[#183946]"
@@ -144,9 +198,10 @@ title={article.title}
 image={article.image}
 className="aspect-[1.55]"
 />
-{article.premium && (
-<span className="absolute right-3 top-3 flex items-center gap-1.5 bg-[#f6f5f0] px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-wider text-[#263c45]">
-<Lock aria-hidden="true" size={12} /> Member story
+{article.premium && !isPremiumMember && (
+<span className="absolute right-3 top-3 flex items-center gap-1.5 bg-[#0b0f98]  px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white transition group-hover:text-[#f0c882]">
+<Lock aria-hidden="true" size={12} /> 
+iTruth Premium 
 </span>
 )}
 </div>

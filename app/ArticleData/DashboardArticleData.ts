@@ -1,6 +1,7 @@
 export type ArticleCategory =
 | "Politics"
 | "Economy"
+| "Business"
 | "World"
 | "Technology"
 | "Opinion"
@@ -83,18 +84,19 @@ body: [
 },
 {
 id: "4",
-slug: "public-ai-tools-rules",
-title: "Researchers look for clearer rules around public AI tools",
+slug: "nvidia-dgx-spark-desktop-ai",
+title: "NVIDIA DGX Spark brings AI development to the desktop",
 excerpt:
-"A growing number of schools and libraries are writing policies that focus on transparency, privacy and human review.",
+"NVIDIA's compact DGX Spark system is designed to let developers build and test AI models locally, without relying on a large data-center setup.",
 category: "Technology",
 publishedAt: "2026-09-26T16:20:00-04:00",
 readTime: "7 min read",
 author: "Theo Park",
 premium: true,
+image: "/images/articles/surface.jpeg",
 body: [
-"Public institutions are moving beyond blanket restrictions as they evaluate how generative tools fit into everyday work. Their emerging policies tend to center on three questions: what information can be shared, when a person must review the output, and how use should be disclosed.",
-"Researchers say the differences between policies matter. A rule designed for classroom assignments may not address the privacy risks involved when staff use a tool to summarize sensitive records.",
+"NVIDIA is bringing its AI computing platform into a compact desktop form with DGX Spark. Built around the GB10 Grace Blackwell superchip, the system pairs CPU and GPU resources with shared memory to support model development and experimentation on a local machine. That gives developers a way to prototype, fine-tune and test workflows without first moving every step to a cloud environment.",
+"The desktop format does not remove the practical limits of local AI work. Model size, performance and power use still depend on the task, and teams will need to weigh the cost of dedicated hardware against cloud access. But for researchers and developers who want more control over their tools and data, DGX Spark points toward a new option between a conventional workstation and a full data-center system.",
 ],
 },
 {

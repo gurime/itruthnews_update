@@ -9,7 +9,7 @@ return (
 <button
 type="button"
 onClick={() => router.back()}
-className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-[#1577c2] transition-colors hover:text-[#b24936]"
+className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-[#1577c2] transition-colors hover:text-[#b24936] cursor-pointer"
 >
 <ArrowLeft aria-hidden="true" size={16} />
 Go back
