@@ -11,15 +11,15 @@ title: "Information We Collect",
 content: [
 {
 subtitle: "Information You Provide",
-text: "When you create an account, subscribe to our newsletter, or make a purchase, we collect information such as your name, email address, and payment information. You may also provide information when you contact us, participate in surveys, or submit content."
+text: "When you create an account, subscribe to our newsletter, or contact us, we collect the information you provide, such as your email address and account or contact details. This site does not currently process purchases or collect payment card information."
 },
 {
 subtitle: "Automatically Collected Information",
-text: "We automatically collect certain information about your device and how you interact with our services, including your IP address, browser type, operating system, referring URLs, pages viewed, and the dates/times of visits."
+text: "Our hosting and authentication providers may process technical information needed to deliver and secure the website and account features."
 },
 {
 subtitle: "Cookies and Tracking Technologies",
-text: "We use cookies, web beacons, and similar technologies to enhance your experience, analyze site usage, and deliver personalized content and advertising. You can control cookie preferences through your browser settings."
+text: "We use essential cookies to keep you signed in and maintain your account session. We do not currently configure analytics, advertising, or cross-site tracking cookies."
 }
 ]
 },
@@ -29,11 +29,11 @@ title: "How We Use Your Information",
 content: [
 {
 subtitle: "To Provide Our Services",
-text: "We use your information to deliver our journalism, process subscriptions, send newsletters, and provide customer support."
+text: "We use your information to provide the website and account features, send newsletters you request, and respond to support inquiries."
 },
 {
 subtitle: "To Improve Our Services",
-text: "We analyze usage patterns to understand how readers engage with our content, improve our website and apps, and develop new features."
+text: "We use feedback and operational information to maintain the website and improve its features. We do not currently configure analytics tools to track how readers use the site."
 },
 {
 subtitle: "To Communicate With You",
@@ -51,7 +51,7 @@ title: "How We Share Your Information",
 content: [
 {
 subtitle: "Service Providers",
-text: "We share information with third-party service providers who perform services on our behalf, such as payment processing, email delivery, hosting services, and analytics. These providers are contractually obligated to protect your information."
+text: "We rely on service providers for website hosting, account authentication, and newsletter delivery. Payment processing and analytics services are not currently configured on this site."
 },
 {
 subtitle: "Business Transfers",
@@ -73,19 +73,19 @@ title: "Cookies & Tracking",
 content: [
 {
 subtitle: "What Are Cookies",
-text: "Cookies are small text files stored on your device that help us recognize you, remember your preferences, and understand how you use our services."
+text: "Cookies are small text files that a website stores in your browser. Our authentication provider uses essential session cookies so account features can recognize that you are signed in."
 },
 {
 subtitle: "Types of Cookies We Use",
-text: "We use essential cookies (required for site functionality), performance cookies (to analyze usage), functional cookies (to remember preferences), and advertising cookies (to deliver relevant ads)."
+text: "We currently use essential authentication and session cookies only. We do not configure performance, advertising, or cross-site tracking cookies."
 },
 {
 subtitle: "Managing Cookies",
-text: "You can control cookies through your browser settings. Note that disabling certain cookies may affect site functionality. Most browsers allow you to refuse cookies or delete existing ones."
+text: "You can remove or block cookies in your browser settings. If you block essential session cookies, you may not be able to stay signed in or use some account features."
 },
 {
 subtitle: "Third-Party Cookies",
-text: "We work with third-party advertising and analytics partners who may set cookies on your device. These partners have their own privacy policies governing their use of your information."
+text: "Our authentication provider processes the session cookies needed for sign-in. We do not currently configure third-party advertising or analytics cookies on this site."
 }
 ]
 },
@@ -129,7 +129,7 @@ text: "We implement appropriate technical and organizational measures to protect
 },
 {
 subtitle: "Payment Security",
-text: "Payment information is processed by our secure payment providers. We do not store complete credit card information on our servers."
+text: "Online payment processing is not currently available on this site. Do not submit payment card information through the website."
 },
 {
 subtitle: "Data Breach Notification",
@@ -180,7 +180,7 @@ Privacy Policy
 Your privacy is important to us
 </p>
 <p className="text-sm text-blue-200">
-Last Updated: December 8, 2024
+Last Updated: October 3, 2026
 </p>
 </div>
 </div>
@@ -194,8 +194,8 @@ Last Updated: December 8, 2024
 <p className="text-xl text-gray-700 leading-relaxed mb-6">
 At iTruth News, we are committed to protecting your privacy and being transparent about 
 how we collect, use, and share your information. This Privacy Policy explains our practices 
-regarding the personal information we collect through our website, mobile applications, 
-newsletters, and other services.
+regarding the personal information we collect through our website, newsletters,
+and other services.
 </p>
 <p className="text-xl text-gray-700 leading-relaxed">
 By using our services, you agree to the collection and use of information in accordance 
@@ -213,7 +213,11 @@ our services.
 <div className="max-w-5xl mx-auto">
 <div className="space-y-12">
 {sections.map((section, index) => (
-<div key={index} className="bg-white rounded-lg shadow-md p-8">
+<div
+id={section.title === "Cookies & Tracking" ? "cookies" : undefined}
+key={index}
+className="bg-white rounded-lg shadow-md p-8"
+>
 <div className="flex items-start mb-6">
 <div className="text-blue-900 mr-4 mt-1">
 {section.icon}

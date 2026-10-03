@@ -264,7 +264,7 @@ represent and serve all communities.
 </div>
 <div className="text-center mt-10">
 <Link 
-href="/ethics-policy" 
+href="/editorial"
 className="text-blue-600 hover:text-blue-800 font-semibold text-lg underline">
 Read Our Full Ethics & Standards Policy →
 </Link>

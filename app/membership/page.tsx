@@ -185,22 +185,22 @@ const membershipFAQs = [
 {
 question: 'Can I cancel anytime?',
 answer:
-'Yes — cancel anytime from your account settings. There are no cancellation fees, and you keep Premium access until the end of your current billing period.',
+'Paid memberships are not currently available, so there is no active paid subscription to cancel.',
 },
 {
 question: 'Do you offer a free trial?',
 answer:
-'New members get a 14-day free trial of Premium. Cancel before it ends and you won\u2019t be charged.',
+'Free trials are not currently available. Membership options shown on this page are for demonstration.',
 },
 {
 question: 'Can I switch between monthly and yearly billing?',
 answer:
-'Yes, you can switch billing periods at any time from your account settings. Switching to yearly applies the discount on your next billing cycle.',
+'Paid billing is not currently available, so billing periods cannot be changed.',
 },
 {
 question: 'Can I gift a membership to someone?',
 answer:
-'Gift memberships (3, 6, or 12 months) are available — contact our support team and we\u2019ll set one up for you.',
+'Gift memberships are not currently available.',
 },
 ];
 
@@ -425,6 +425,9 @@ Journalism
 <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
 Choose the membership that fits your commitment to truth and transparency.
 Your support keeps our journalism free from corporate influence.
+</p>
+<p className="mt-6 mx-auto max-w-2xl rounded-lg border border-blue-200 bg-blue-50 px-5 py-3 text-sm text-blue-900">
+Membership plans and prices are demonstration content. Checkout is not connected, and no payments are accepted.
 </p>
 </div>
 

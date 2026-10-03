@@ -149,7 +149,7 @@ Meet the journalists who guide our editorial vision and uphold our standards
 </p>
 <div className="flex flex-wrap justify-center gap-4">
 <Link 
-href="/ethics-policy" 
+href="#principles"
 className="px-8 py-4 bg-white text-blue-900 rounded-full font-bold text-lg hover:bg-blue-50 transition-colors shadow-lg">
 Our Standards
 </Link>
@@ -192,7 +192,7 @@ we confront them openly and explain our reasoning to readers.
 </div>
 
 {/* Editorial Principles */}
-<div className="bg-gray-100 py-16">
+<div id="principles" className="bg-gray-100 py-16">
 <div className="container mx-auto px-4">
 <div className="max-w-6xl mx-auto">
 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12 text-center">

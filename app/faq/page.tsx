@@ -24,27 +24,27 @@ import Footer from "../components/Footer";
   {
   category: "subscription",
   question: "How much does an iTruth News membership cost?",
-  answer: "We offer flexible membership options starting at $5/month. Premium memberships are available at $10/month and include additional benefits like ad-free reading, exclusive content, and early access to major stories. Annual subscriptions offer a discount."
+  answer: "Membership options and prices shown on the site are for demonstration. Paid memberships and checkout are not currently available, so you cannot be charged."
   },
   {
   category: "subscription",
   question: "What payment methods do you accept?",
-  answer: "We accept all major credit cards (Visa, Mastercard, American Express, Discover), PayPal, and Apple Pay. All payments are processed securely through our payment provider."
+  answer: "We do not currently accept payments because checkout is not enabled. Do not submit payment information through this site."
   },
   {
   category: "subscription",
   question: "Can I cancel my membership at any time?",
-  answer: "Yes! You can cancel your membership at any time from your account settings. There are no cancellation fees, and you'll retain access until the end of your current billing period."
+  answer: "Paid memberships are not currently available, so there is no active paid subscription to cancel."
   },
   {
   category: "subscription",
   question: "Do you offer a free trial?",
-  answer: "Yes, we offer a 14-day free trial for new members. You can explore all premium features risk-free. If you decide it's not for you, simply cancel before the trial ends and you won't be charged."
+  answer: "Free trials are not currently available. Membership options shown on the site are for demonstration."
   },
   {
   category: "subscription",
   question: "Can I gift a membership to someone?",
-  answer: "Absolutely! Gift memberships are available for 3, 6, or 12-month periods. Visit our membership page and select 'Gift a Membership' to get started."
+  answer: "Gift memberships are not currently available."
   },
   {
   category: "account",
@@ -59,7 +59,7 @@ import Footer from "../components/Footer";
   {
   category: "account",
   question: "How do I update my email or payment information?",
-  answer: "Log in to your account and go to Settings. From there, you can update your email address, password, payment method, and other account preferences."
+  answer: "You can manage your account credentials and profile details from your account. Payment information cannot be added or changed because checkout is not currently enabled."
   },
   {
   category: "account",
@@ -310,7 +310,7 @@ import Footer from "../components/Footer";
   <Link href="/about" className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
   <p className="font-semibold text-gray-900">About Us</p>
   </Link>
-  <Link href="/ethics-policy" className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+  <Link href="/editorial" className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
   <p className="font-semibold text-gray-900">Ethics Policy</p>
   </Link>
   <Link href="/membership" className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">

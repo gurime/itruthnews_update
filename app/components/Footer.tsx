@@ -207,7 +207,7 @@ toggleSection={toggleSection}
 >
 <FooterLink href="../privacy" label="Privacy Policy" />
 <FooterLink href="../terms" label="Terms of Service" />
-<FooterLink href="../cookies" label="Cookie Policy" />
+<FooterLink href="/privacy#cookies" label="Cookie Policy" />
 <FooterLink href="../accessibility" label="Accessibility" />
 </FooterCollapse>
 </div>

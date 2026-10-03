@@ -141,7 +141,7 @@ We believe everyone has the right to access quality journalism, regardless of th
 or the technology they use.
 </p>
 <p className="text-xl text-gray-700 leading-relaxed mb-6">
-We continuously work to improve the accessibility of our website and mobile applications, 
+We continuously work to improve the accessibility of our website,
 applying relevant accessibility standards and best practices. Our goal is to meet or exceed 
 Web Content Accessibility Guidelines (WCAG) 2.1 Level AA.
 </p>

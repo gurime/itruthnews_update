@@ -331,7 +331,7 @@ We review all correction requests and respond within 48 hours
 <div className="max-w-4xl mx-auto text-center">
 <p className="text-gray-600 mb-4 font-semibold">Learn More About Our Standards</p>
 <div className="flex flex-wrap justify-center gap-6 text-sm">
-<Link href="/ethics-policy" className="text-blue-600 hover:text-blue-800 font-semibold">
+<Link href="/editorial" className="text-blue-600 hover:text-blue-800 font-semibold">
 Ethics & Standards Policy
 </Link>
 <Link href="/editorial" className="text-blue-600 hover:text-blue-800 font-semibold">

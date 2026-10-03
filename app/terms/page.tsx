@@ -10,7 +10,7 @@ icon: <CheckCircle className="w-8 h-8" />,
 title: "Acceptance of Terms",
 content: [
 {
-text: "By accessing or using iTruth News services, including our website, mobile applications, newsletters, and any other services we provide (collectively, the 'Services'), you agree to be bound by these Terms of Service ('Terms'). If you do not agree to these Terms, please do not use our Services."
+text: "By accessing or using iTruth News services, including our website, newsletters, and any other services we provide (collectively, the 'Services'), you agree to be bound by these Terms of Service ('Terms'). If you do not agree to these Terms, please do not use our Services."
 },
 {
 text: "These Terms constitute a legally binding agreement between you and iTruth News. We may modify these Terms at any time, and such modifications will be effective immediately upon posting. Your continued use of the Services after any changes indicates your acceptance of the modified Terms."
@@ -63,19 +63,19 @@ title: "Subscriptions & Payments",
 content: [
 {
 subtitle: "Subscription Plans",
-text: "We offer various subscription plans that provide access to premium content and features. Subscription terms, including pricing and features, are described on our membership page and may be changed from time to time."
+text: "Membership options and prices displayed on the membership page are for demonstration. Paid subscriptions and online checkout are not currently available through this site."
 },
 {
 subtitle: "Billing",
-text: "Subscriptions are billed on a recurring basis (monthly or annually, depending on your plan). You authorize us to charge your payment method on the applicable billing cycle. If your payment method fails, we may suspend or terminate your subscription."
+text: "Because online checkout is not currently available, this site does not accept payment details or initiate subscription charges."
 },
 {
 subtitle: "Cancellation & Refunds",
-text: "You may cancel your subscription at any time through your account settings. Cancellation takes effect at the end of your current billing period. We do not provide refunds for partial subscription periods, except as required by law or at our sole discretion."
+text: "There are no paid subscriptions to cancel or refund through this site at this time."
 },
 {
 subtitle: "Free Trials",
-text: "We may offer free trial periods for new subscribers. If you do not cancel before the end of the trial period, your payment method will be charged for the subscription plan you selected. Free trial offers are limited to one per customer."
+text: "Free trials are not currently available through this site."
 }
 ]
 },
@@ -196,7 +196,7 @@ Terms of Service
 Please read these terms carefully before using our services
 </p>
 <p className="text-sm text-blue-200">
-Last Updated: December 8, 2024
+Last Updated: October 3, 2026
 </p>
 </div>
 </div>
@@ -224,7 +224,7 @@ By using iTruth News services, you agree to these terms. Please read them carefu
 <div className="prose prose-lg max-w-none">
 <p className="text-lg text-gray-700 leading-relaxed">
 Welcome to iTruth News. These Terms of Service govern your access to and use of our 
-website, mobile applications, newsletters, and all related services. By accessing or using 
+website, newsletters, and all related services. By accessing or using
 our services, you acknowledge that you have read, understood, and agree to be bound by 
 these Terms.
 </p>
@@ -320,10 +320,10 @@ View FAQ
 <Link href="/privacy" className="text-blue-600 hover:text-blue-800 font-semibold">
 Privacy Policy
 </Link>
-<Link href="/cookie-policy" className="text-blue-600 hover:text-blue-800 font-semibold">
+<Link href="/privacy#cookies" className="text-blue-600 hover:text-blue-800 font-semibold">
 Cookie Policy
 </Link>
-<Link href="/ethics-policy" className="text-blue-600 hover:text-blue-800 font-semibold">
+<Link href="/editorial" className="text-blue-600 hover:text-blue-800 font-semibold">
 Editorial Standards
 </Link>
 <Link href="/about" className="text-blue-600 hover:text-blue-800 font-semibold">
