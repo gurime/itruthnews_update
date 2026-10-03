@@ -182,10 +182,10 @@ Explore membership
 </Link>
 </section>
 ) : (
-<div className="mx-auto max-w-3xl pb-12">
+<div className="mx-auto first-letter:text-[#943b2c] first-letter:text-5xl  max-w-3xl pb-12">
 {article.body.map((paragraph, index) => (
 <p
-className="mb-6 font-serif text-lg leading-8 text-[#283c42]"
+className="mb-3 font-serif text-lg leading-8 text-black"
 key={index}
 >
 {paragraph}
